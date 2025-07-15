@@ -11,9 +11,9 @@ MINIO_ENDPOINT = os.getenv("MINIO_ENDPOINT")
 MINIO_ACCESS_KEY = os.getenv("MINIO_ACCESS_KEY")
 MINIO_SECRET_KEY = os.getenv("MINIO_SECRET_KEY")
 
-app = FastAPI()
+app = FastAPI(title="irmnet-api-storage", description="API for uploading files to MinIO", version="1.0")
 
-# Konfigurasi MinIO
+# configure MinIO client
 minio_client = Minio(
     endpoint=MINIO_ENDPOINT,
     access_key=MINIO_ACCESS_KEY,
@@ -28,7 +28,7 @@ if not minio_client.bucket_exists(bucket_name):
     minio_client.make_bucket(bucket_name)
 
 
-@app.post("/upload")
+@app.post("/upload", tags=["File Handling"])
 async def upload_file(file: UploadFile = File(...)):
     try:
         contents = await file.read()
